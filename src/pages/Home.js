@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProjectCard from "../components/ProjectCard";
+import ProjectForm from "../components/ProjectForm";
 
 const Home = () => {
   const [projects, setProjects] = useState([]);
@@ -14,7 +15,6 @@ const Home = () => {
         if (!res.ok) throw new Error("Something went wrong!");
         const data = await res.json();
         setProjects(data);
-        console.log(data);
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -38,7 +38,7 @@ const Home = () => {
             ))}
         </div>
       </div>
-      <div className="right"></div>
+      <ProjectForm />
     </div>
   );
 };
