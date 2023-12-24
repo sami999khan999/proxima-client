@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useProjectContext } from "../hooks/useProjectsContext";
 
-const ProjectForm = () => {
-  const [title, setTitle] = useState("");
-  const [tech, setTech] = useState("");
-  const [budget, setBudget] = useState("");
-  const [duration, setDuration] = useState("");
-  const [manager, setManager] = useState("");
-  const [dev, setDev] = useState("");
+const ProjectForm = ({ project, isModalOpen, isOverlayOpen }) => {
+  const [title, setTitle] = useState(project ? project.title : "");
+  const [tech, setTech] = useState(project ? project.tech : "");
+  const [budget, setBudget] = useState(project ? project.budget : "");
+  const [duration, setDuration] = useState(project ? project.duration : "");
+  const [manager, setManager] = useState(project ? project.manager : "");
+  const [dev, setDev] = useState(project ? project.dev : "");
   const [error, setError] = useState(null);
   const [emptyFields, setEmptyFields] = useState([]);
 
@@ -19,40 +19,81 @@ const ProjectForm = () => {
     // data
     const projectObj = { title, tech, budget, duration, manager, dev };
 
-    // post req
-    const res = await fetch("http://localhost:5000/api/projects/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(projectObj),
-    });
-    const json = await res.json();
+    // if there is no project
+    if (!project) {
+      // post req
+      const res = await fetch("http://localhost:5000/api/projects/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(projectObj),
+      });
+      const json = await res.json();
 
-    // !res.ok , set error
-    if (!res.ok) {
-      setError(json.error);
-      setEmptyFields(json.emptyFields);
+      // !res.ok , set error
+      if (!res.ok) {
+        setError(json.error);
+        setEmptyFields(json.emptyFields);
+      }
+
+      // res.ok , reset
+      if (res.ok) {
+        setTitle("");
+        setTech("");
+        setBudget("");
+        setDev("");
+        setDuration("");
+        setManager("");
+        setError(null);
+        setEmptyFields([]);
+        dispatch({ type: "CREATE_PROJECT", payload: json });
+      }
+      return;
     }
 
-    // res.ok , reset
-    if (res.ok) {
-      setTitle("");
-      setTech("");
-      setBudget("");
-      setDev("");
-      setDuration("");
-      setManager("");
-      setError(null);
-      setEmptyFields([]);
-      dispatch({ type: "CREATE_PROJECT", payload: json });
+    // if there is a project
+    if (project) {
+      // send patch req
+      const res = await fetch(
+        `http://localhost:5000/api/projects/${project._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(projectObj),
+        }
+      );
+      const json = await res.json();
+
+      // !res.ok
+      if (!res.ok) {
+        setError(json.error);
+        setEmptyFields(json.emptyFields);
+      }
+
+      // res.ok
+      if (res.ok) {
+        setError(null);
+        setEmptyFields([]);
+
+        // dispatch
+        dispatch({ type: "UPDATE_PROJECT", payload: json });
+
+        // close overlay and modal
+        isModalOpen(false);
+        isOverlayOpen(false);
+      }
+
+      return;
     }
   };
 
   return (
     <form className="project-form flex flex-col gap-5">
       <h2 className="text-4xl font-medium text-sky-400 mb-10">
-        Add a new project
+        {project ? "Update Project" : "Add a new project"}
       </h2>
 
       <div className="form-controller flex flex-col gap-2">
@@ -184,7 +225,7 @@ const ProjectForm = () => {
         className="bg-sky-400 text-slate-900 py-3 rounded-lg hover:bg-sky-50 duration-300"
         onClick={handelSubmit}
       >
-        Add project
+        {project ? "Confirm update" : "Add project"}
       </button>
       {error && (
         <p className="bg-rose-500/20 rounded-lg p-5 text-rose-500 border border-rose-500">

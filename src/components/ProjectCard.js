@@ -1,9 +1,14 @@
 import { currencyFormatter } from "../utils/currenctFormatter";
 import { useProjectContext } from "../hooks/useProjectsContext";
 import moment from "moment";
+import { useState } from "react";
+import ProjectForm from "./ProjectForm";
 
 const ProjectCard = ({ project }) => {
   const { dispatch } = useProjectContext();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
   const handelDeleat = async () => {
     const res = await fetch(
@@ -18,6 +23,16 @@ const ProjectCard = ({ project }) => {
     if (res.ok) {
       dispatch({ type: "DELETE_PROJECT", payload: json });
     }
+  };
+
+  const updataHaldeler = () => {
+    setIsModalOpen(true);
+    setIsOverlayOpen(true);
+  };
+
+  const handelOverlay = () => {
+    setIsModalOpen(false);
+    setIsOverlayOpen(false);
   };
 
   return (
@@ -38,7 +53,7 @@ const ProjectCard = ({ project }) => {
             Added: {moment(project.createdAt).format("MMM DD, hh:mm A")}
           </span>
           <span>
-            Updated: {moment(project.createdAt).format("MMM DD, hh:mm A")}
+            Updated: {moment(project.updatedAt).format("MMM DD, hh:mm A")}
           </span>
         </div>
         <div className="right flex flex-col">
@@ -51,7 +66,10 @@ const ProjectCard = ({ project }) => {
         </div>
       </div>
       <div className="bottom flex gap-5">
-        <button className="bg-sky-400 text-slate-900 py-2 px-5 rounded shadow-xl hover:bg-sky-50 duration-300">
+        <button
+          onClick={updataHaldeler}
+          className="bg-sky-400 text-slate-900 py-2 px-5 rounded shadow-xl hover:bg-sky-50 duration-300"
+        >
           Updata
         </button>
         <button
@@ -60,6 +78,24 @@ const ProjectCard = ({ project }) => {
         >
           Deleat
         </button>
+      </div>
+      <div
+        onClick={handelOverlay}
+        className={`overlay fixed z-[1] h-screen w-screen bg-slate-900/50 backdrop-blur-sm top-0 bottom-0 left-0 right-0 ${
+          isOverlayOpen ? "" : "hidden"
+        }`}
+      ></div>
+
+      <div
+        className={`updata-modal w-[35rem] fixed  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-800 p-20 rounded-xl shadow-xl border border-slate-700 z-[2] ${
+          isModalOpen ? "" : "hidden"
+        }`}
+      >
+        <ProjectForm
+          project={project}
+          isModalOpen={setIsModalOpen}
+          isOverlayOpen={setIsOverlayOpen}
+        />
       </div>
     </div>
   );
