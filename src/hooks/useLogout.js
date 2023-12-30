@@ -1,13 +1,16 @@
 import { useAuthContext } from "./useAuthContext";
+import { useProjectContext } from "./useProjectsContext";
 
 export const useLogout = () => {
-  const { dispatch } = useAuthContext();
+  const { dispatch: logoutDispatch } = useAuthContext();
+  const { dispatch: projectsDispatch } = useProjectContext();
 
   const logOut = () => {
     // clear localStroage
     localStorage.removeItem("user");
     // dispathc logout
-    dispatch({ type: "LOGOUT" });
+    logoutDispatch({ type: "LOGOUT" });
+    projectsDispatch({ type: "SET_PROJECT", payload: null });
   };
 
   return { logOut };

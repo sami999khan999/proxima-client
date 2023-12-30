@@ -35,9 +35,12 @@ const Navebar = () => {
         )}
 
         {user && (
-          <div className="flex gap-10 items-center">
-            <span className="text-[1.2rem] tracking-widest text-gray-300 font-semibold uppercase">
-              {user.name}
+          <div className="flex gap-6 items-center">
+            <span className="text-[1.2rem] tracking-widest font-semibold text-gray-400 uppercase cursor-pointer hover:text-sky-300 duration-300">
+              {`  ${user.name} `}
+            </span>
+            <span className="cursor-pointer font-bold text-gray-400 text-[1.2rem] hover:text-sky-300 duration-300">
+              |
             </span>
             <button
               onClick={logoutHandeler}
