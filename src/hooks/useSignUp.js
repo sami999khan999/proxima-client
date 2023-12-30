@@ -11,13 +11,16 @@ export const useSignUp = () => {
     setLoading(true);
     setError(null);
 
-    const res = await fetch("http://localhost:5000/api/user/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
+    const res = await fetch(
+      `${process.env.REACT_APP_BASE_URL}/api/user/signup`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      }
+    );
 
     const json = await res.json();
 
