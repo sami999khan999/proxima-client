@@ -1,6 +1,14 @@
+import { useAuthContext } from "../hooks/useAuthContext";
+
 const Footer = () => {
+  const { user } = useAuthContext();
+
   return (
-    <footer class=" rounded-lg shadow dark:bg-slate-900 m-4">
+    <footer
+      class={`rounded-lg shadow dark:bg-slate-900 h-fit ${
+        !user ? "mt-24" : ""
+      }`}
+    >
       <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div class="sm:flex sm:items-center sm:justify-between">
           <a class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse ">
@@ -34,8 +42,8 @@ const Footer = () => {
         <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
         <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">
           © 2023{" "}
-          <a href="https://flowbite.com/" class="hover:underline">
-            Flowbite™
+          <a href="" class="hover:underline">
+            Proxima™
           </a>
           . All Rights Reserved.
         </span>

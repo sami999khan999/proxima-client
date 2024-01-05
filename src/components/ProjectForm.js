@@ -108,7 +108,7 @@ const ProjectForm = ({ project, isModalOpen, isOverlayOpen }) => {
         {project ? "Update Project" : "Add a new project"}
       </h2>
 
-      <div className="form-controller flex flex-col gap-2">
+      <div className="form-controller flex flex-col gap-2 ">
         <label
           htmlFor="title"
           className="cursor-pointer text-slate-300 hover:text-sky-400 duration-300 "
