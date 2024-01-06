@@ -28,7 +28,7 @@ To run the project on your local machine, follow these steps:
 1. Clone the repository to your local machine:
 
 ```
-git clone https://github.com/ariful171042/proxima.git
+git clone https://github.com/sami999khan999/proxima_client
 ```
 
 2. Install the dependencies:
